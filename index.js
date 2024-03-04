@@ -2,6 +2,7 @@
 var wH = window.innerHeight;
 var wW = window.innerWidth;
 let backgroundRendering = document.getElementById("backgroundRendering");
+let message = document.getElementById("message");
 var generateStars = function generateStars(f) {
     for (var e = 0; e < f; e++) {
         var single = document.createElement("div");
@@ -31,7 +32,13 @@ window.onload = function () {
     animationEffect();
     // 背景音乐
     let audio = document.getElementById('bgm');
-    document.querySelector("body").onclick = function () {
+   	message.onclick = function () {
+        if (!autoPlayFlag) {
+            audio.play();
+            autoPlayFlag = true;
+        }
+    }
+	document.querySelector("body").onclick = function () {
         if (!autoPlayFlag) {
             audio.play();
             autoPlayFlag = true;
@@ -46,7 +53,7 @@ window.onload = function () {
         setTimeout(function () {
             document.querySelector("body > div.message").style.opacity = 1 - i/10;
             if(i==10){
-                document.querySelector("body > div.message > p").innerHTML = "点击屏幕可快速释放烟花"
+                document.querySelector("body > div.message > p").innerHTML = "👆随便戳戳屏幕 让烟花更绚烂叭💥"
             }
         },i*60+8000)
     };
@@ -265,7 +272,7 @@ function putValue(fireworks, context, ele, dr, callback) {
     } else {
         let text = ele.innerHTML;
         context.save();
-        let fontSize = getRandom(3,11);
+        let fontSize = getRandom(6,12);
         context.font = fontSize + "vw 宋体 bold";
         context.textAlign = "center";
         context.textBaseline = "middle";

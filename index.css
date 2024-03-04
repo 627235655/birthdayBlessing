@@ -20,20 +20,21 @@ audio {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    width: 160px;
-    background-color: rgba(0, 0, 0, 0.52);
-    padding: 0px 17px;
-    top: 25px;
-    border-radius: 6px;
+	justify-content: center;
+    width: 450px;
+    padding: 0px 32px;
+    top: 32px;
+    border-radius: 12px;
     overflow: hidden;
     z-index: 1000;
     opacity: 0;
+	background: rgb(232, 104, 244);
 }
 
 /* 消息提示框内容样式 */
 .message p {
     line-height: 1;
-    font-size:14px;
+    font-size:28px;
     color: #ffffff;
 }
 

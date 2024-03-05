@@ -11,10 +11,18 @@ var generateStars = function generateStars(f) {
         backgroundRendering.appendChild(single);
     }
 };
-generateStars(getRandom(140,240));
-
+// generateStars(getRandom(140,240));
+generateStars(getRandom(200, 300));
 
 // 全局变量 提供内容/对象存储
+const shapeLength = document.getElementsByClassName('shape').length;
+const randomRGBA =  "rgba(" +
+            parseInt(getRandom(128, 255)) +
+            "," +
+            parseInt(getRandom(128, 255)) +
+            "," +
+            parseInt(getRandom(128, 255)) +
+            " , 1)";
 let fireworksCanvas = document.getElementById("fireworks");
 let currentFireworks = document.createElement("canvas");
 let currentObject = currentFireworks.getContext("2d");
@@ -24,6 +32,7 @@ currentFireworks.width = fireworksCanvas.width = window.innerWidth;
 currentFireworks.height = fireworksCanvas.height = window.innerHeight;
 let fireworksExplosion = [];
 let autoPlayFlag = false;
+let lastTime;
 
 // 自动加载烟花动画
 window.onload = function () {
@@ -57,7 +66,7 @@ window.onload = function () {
             }
         },i*60+8000)
     };
-        for (let i = 0; i <= 10; i++){
+    for (let i = 0; i <= 10; i++){
         setTimeout(function () {
             document.querySelector("body > div.message").style.opacity = i/10;
         },i*60+8600)
@@ -69,10 +78,8 @@ window.onload = function () {
     };
 };
 
-let lastTime;
-
-
 // 烟花动画效果
+let renderShapeIndex = 0; // 先按顺序展示文字 再随机
 function animationEffect() {
     fireworksObject.save();
     fireworksObject.fillStyle = "rgba(0,5,25,0.1)";
@@ -80,7 +87,8 @@ function animationEffect() {
     fireworksObject.restore();
     let newTime = new Date();
     if (newTime - lastTime > getRandom(10,1600) + (window.innerHeight - 767) / 2) {
-        let random = Math.random() * 100 > 15;
+        // let random = Math.random() * 100 > 15;
+        let random = Math.random() * 100 > 30;
         let x = getRandom(0, (fireworksCanvas.width));
         let y = getRandom(0,400);
         if (random) {
@@ -94,22 +102,25 @@ function animationEffect() {
                 }
             );
             fireworksExplosion.push(bigExplode);
-
         } else {
             let x = getRandom(fireworksCanvas.width/2-300, fireworksCanvas.width/2+300);
-            let y = getRandom(0, 350);
+            // let y = getRandom(0, 350);
+            let y = getRandom(0, fireworksCanvas.height / 3);
+            const hasRenderOnce = renderShapeIndex >= shapeLength;
             let bigExplode = new explode(
                 getRandom(0, fireworksCanvas.width),
                 getRandom(1, 3),
-                "#FFF",
+                // "#FFF",
+                randomRGBA,
                 {
                     x: x,
                     y: y,
                 },
                 document.querySelectorAll(".shape")[
-                    parseInt(getRandom(0, document.querySelectorAll(".shape").length))
+                    hasRenderOnce ? parseInt(getRandom(0, document.querySelectorAll(".shape").length)) : renderShapeIndex
                     ]
             );
+            renderShapeIndex++;
             fireworksExplosion.push(bigExplode);
         }
         lastTime = newTime;
@@ -169,7 +180,7 @@ let explode = function (x, r, c, explodeArea, shape) {
     this.shape = shape || false;
     this.explodeArea = explodeArea;
     this.dead = false;
-    this.ba = parseInt(getRandom(80, 200));
+    this.ba = parseInt(getRandom(80, 500));
 };
 explode.prototype = {
     _paint: function () {
@@ -327,7 +338,7 @@ function getRandom(a, b) {
     return Math.random() * (b - a) + a;
 }
 
-let maxRadius = 1,
+let maxRadius = 4,
     sparks = [];
 
 function drawFireworks() {
@@ -353,7 +364,14 @@ newSpark.prototype = {
         fireworksObject.save();
         fireworksObject.beginPath();
         fireworksObject.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-        fireworksObject.fillStyle = "rgba(255,255,255," + this.r + ")";
+        fireworksObject.fillStyle = "rgba(255,255,255," + (this.r / maxRadius) + ")";
+        //   "rgba(" +
+        //     parseInt(getRandom(128, 255)) +
+        //     "," +
+        //     parseInt(getRandom(128, 255)) +
+        //     "," +
+        //     parseInt(getRandom(128, 255)) +
+        //     " , "+ this.r / maxRadius+ ")";
         fireworksObject.fill();
         fireworksObject.restore();
     },
